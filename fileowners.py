@@ -1,34 +1,36 @@
 import os
+import sys
 import grp
 import pwd
 
-def create_file_if_not_exists(filename):
-    """Create a file if it does not exist."""
-    if not os.path.exists(filename):
-        open(filename, 'a').close()
+def create_file(filename):
+    if not os.path.isfile(filename):
+        open(filename, "a").close()  # You missed () here
 
-def set_owner_and_group(filename, owner, group):
-    """Set the owner and group of a file."""
-    try:
-        uid = pwd.getpwnam(owner).pw_uid
-        gid = grp.getgrnam(group).gr_gid
-        os.chown(filename, uid, gid)
-        print(f"Changed ownership of {filename} to {owner}:{group}")
-    except Exception as e:
-        print(f"Failed to change owner or group for {filename}: {e}")
+def check_owners(filename, user, group):
+    stat_info = os.stat(filename)
+    current_user = pwd.getpwuid(stat_info.st_uid).pw_name
+    current_group = grp.getgrgid(stat_info.st_gid).gr_name
+    
+    if current_user != user or current_group != group:
+        try: 
+            uid = pwd.getpwnam(user).pw_uid
+            gid = grp.getgrnam(group).gr_gid
+            os.chown(filename, uid, gid)
+            print(f"Changed ownership of {filename} to {user}:{group}")
+        except KeyError as e:
+            print(f"User or group not found: {e}")
+        except OSError as e:
+            print(f"Failed to change owner or group for {filename}: {e}")
 
-def manage_file(filename, owner, group):
-    """Create a file (if it does not exist) and set its owner and group."""
-    create_file_if_not_exists(filename)
-    set_owner_and_group(filename, owner, group)
+def manage_file(filename, user, group):
+    create_file(filename)
+    check_owners(filename, user, group)
 
-# List of files and their desired properties
-files_and_properties = [
-    {"filename": "file1", "owner": "root", "group": "root"},
-    {"filename": "file2", "owner": "root", "group": "othergroup"},
-    {"filename": "file3", "owner": "otheruser", "group": "othergroup"},
-]
 
-# Apply properties to each file
-for file_properties in files_and_properties:
-    manage_file(**file_properties)
+if __name__ == "__main__":
+    files = [{"filename": "ferrari1.txt", "user" : "root", "group": "root"},
+             {"filename": "ferrari2.txt", "user" : "wheel", "group": "root"},
+             {"filename": "ferrari3.txt", "user" : "root", "group": "kali"}]
+    for file in files:
+        manage_file(**file)
