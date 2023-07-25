@@ -9,7 +9,7 @@ def get_timestamp(files):
     date_time_list = []
     for filename in files:
         # search for the date pattern in the filename
-        match = re.search(r'\d{8}', filename)
+        match = re.search(r'(\d{4}\d{2}\d{2})', filename)
         if match:
             date_time_list.append(match.group())
     return max(date_time_list) if date_time_list else None
