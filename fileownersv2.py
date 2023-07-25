@@ -27,14 +27,24 @@ def check_owners(filename, user, group):
     except OSError as e:
         print(f"Failed to change owner or group for {filename}: {e}")
 
-def manage_file(filename, user, group):
+def check_permissions(filename, perms):
+    if oct(os.stat(filename).st_mode)[-3:] != str(perms):
+        os.chmod(filename, perms)
+        print(f"Changed permissions of {filename} to {perms}")
+
+def manage_file(filename, user, group, perms):
     create_file(filename)
     check_owners(filename, user, group)
-
+    check_permissions(filename, perms)
 
 if __name__ == "__main__":
-    files = [{"filename": "ferrari1.txt", "user" : "root", "group": "root"},
-             {"filename": "ferrari2.txt", "user" : "wheel", "group": "root"},
-             {"filename": "ferrari3.txt", "user" : "root", "group": "kali"}]
+    files = [
+        {"filename": "group_only.txt", "user" : "root", "group": "wheel", "perms" : 0o660},
+        {"filename": "public_knowledge.txt", "user" : "root", "group": "root", "perms" : 0o644},
+        {"filename": "secret.txt", "user" : "root", "group": "root", "perms" : 0o600},
+        {"filename": "secret.txt.pgp", "user" : "root", "group": "root", "perms" : 0o644},
+        {"filename": "wiki.txt", "user" : "nobody", "group": "nogroup", "perms" : 0o777}
+    ]
     for file in files:
         manage_file(**file)
+
