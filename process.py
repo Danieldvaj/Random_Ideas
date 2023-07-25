@@ -3,7 +3,7 @@ import re
 def read_data(filename):
     with open(filename, "r") as file_data:
         data = file_data.readlines()
-        print("Parsing process-list.txt in current directory... done.")
+        print("Parsing processlist.txt")
         return data
 
 def count_processes(data):
@@ -18,7 +18,7 @@ def user_invoked(data):
         print(len(re.sub(r'(\d+)\s+(\\_)', r'\1\2', line)), "tweede" , re.sub(r'(\d+)\s+(\\_)', r'\1\2', line) )
         if len(line) - len(re.sub(r'(\d+)\s+(\\_)', r'\1\2', line)) >= 5:
             count += 1
-    print(f"User-invoked processes: {count}")
+    print(f"User processes{count}")
 
 def count_scripts(data):
     scripts = {}
@@ -30,7 +30,7 @@ def count_scripts(data):
             # Count the occurrences of each script
             scripts[script] = scripts.get(script, 0) + 1
 
-    print("Active scripts (*.sh):")
+    print("Active scripts")
     for script, count in scripts.items():
         print(f"    {count}x {script}")
 
