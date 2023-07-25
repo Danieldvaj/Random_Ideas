@@ -39,11 +39,11 @@ def manage_file(filename, user, group, perms):
 
 if __name__ == "__main__":
     files = [
-        {"filename": "group_only.txt", "user" : "root", "group": "wheel", "perms" : 0o660},
-        {"filename": "public_knowledge.txt", "user" : "root", "group": "root", "perms" : 0o644},
-        {"filename": "secret.txt", "user" : "root", "group": "root", "perms" : 0o600},
-        {"filename": "secret.txt.pgp", "user" : "root", "group": "root", "perms" : 0o644},
-        {"filename": "wiki.txt", "user" : "nobody", "group": "nogroup", "perms" : 0o777}
+        {"filename": "test.txt", "user" : "root", "group": "nogroup", "perms" : 0o777},
+        {"filename": "test2.txt", "user" : "root", "group": "root", "perms" : 0o777},
+        {"filename": "test3.txt", "user" : "root", "group": "root", "perms" : 0o777},
+        {"filename": "text4.txt", "user" : "root", "group": "root", "perms" : 0o777},
+        {"filename": "text5.txt", "user" : "root", "group": "test", "perms" : 0o777}
     ]
     for file in files:
         manage_file(**file)
